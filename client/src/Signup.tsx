@@ -1,8 +1,10 @@
+import classes from "*.module.css";
+import { TextField, Button } from "@material-ui/core";
 import React, { useState } from "react";
-import logo from "./logo.svg";
+import { Link } from "react-router-dom";
 import "./App.css";
 
-export default function App() {
+export default function Signup() {
   return (
     <div className="grid grid-cols-3">
       <div className="col-span-2 h-screen">
@@ -244,13 +246,34 @@ export default function App() {
               />
             </g>
           </svg>
-          <h1 className="logo-text">Track your time in Residency</h1>
+          <h1>Track your time in Residency</h1>
         </div>
       </div>
       <div className="bg-crimson shadow-2xl shadow-inner h-screen grid justify-items-center">
-        <div className="rounded-lg shadow-2xl w-3/4 h-36 bg-white mt-96 p-8">
-          <h1>Login / Signup</h1>
-          Email
+        <div className="rounded-lg shadow-2xl w-3/4 bg-white mt-96 h-80 flex-col flex p-6">
+          <h1 className="text-3xl">
+            <Link to="/">Login</Link> /{" "}
+            <text className="text-lightGrey">Signup</text>
+          </h1>
+          <form className="flex flex-col mt-6 gap-4">
+            <TextField
+              id="from_name"
+              name="from_name"
+              label="Name"
+              variant="filled"
+              required
+            />
+            <TextField
+              id="from_email"
+              name="from_email"
+              label="Email"
+              required
+              variant="filled"
+            />
+            <Button variant="contained" type="submit">
+              Submit
+            </Button>
+          </form>
         </div>
       </div>
     </div>
