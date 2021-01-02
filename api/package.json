@@ -1,0 +1,36 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Restful API with Node.js, Express, and MongoDB for OU Nuerology Residents",
+  "main": "app.js",
+  "keywords": [
+    "nodejs",
+    "express",
+    "react",
+    "rest",
+    "api",
+    "mongodb"
+  ],
+  "author": "Shelby Huffman",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.9",
+    "morgan": "~1.9.1",
+    "validator": "^13.5.2"
+  }
+}
