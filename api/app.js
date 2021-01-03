@@ -1,19 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
-
-// set up express
+const cors = require("cors");
+const helmet = require("helmet");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`The server has started on port: ${PORT}`));
-
-// set up mongoose
 
 mongoose.connect(
   process.env.MONGODB_CONNECTION_STRING,
@@ -28,5 +22,16 @@ mongoose.connect(
   }
 );
 
+// middlewares
+// Reference : https://expressjs.com/en/advanced/best-practice-security.html
+app.use(bodyParser.json());
+app.use(cors());
+app.use(cookieParser());
+app.use(helmet()); // Protects are app from web vulnerabilities
+
 // set up routes
-app.use("/users", require("./routes/user.routes.js"));
+app.use("/api", authRoutes);
+
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => console.log(`The server has started on port: ${PORT}`));
