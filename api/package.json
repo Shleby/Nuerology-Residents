@@ -14,7 +14,7 @@
   "author": "Shelby Huffman",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "license": "ISC",
   "dependencies": {

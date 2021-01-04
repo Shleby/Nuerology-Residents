@@ -9,6 +9,8 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+app.use(express.static("public"));
+
 mongoose.connect(
   process.env.MONGODB_CONNECTION_STRING,
   {

@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Unauthorized() {
   return (
     <div className="bg-red-200 flex items-center justify-center h-screen w-full overflow-hidden">
