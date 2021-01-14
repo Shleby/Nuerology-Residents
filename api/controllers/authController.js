@@ -2,15 +2,68 @@ const User = require("../models/user.model.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { createJWT } = require("../utils/auth");
-const { json } = require("body-parser");
 
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-exports.logout = (req, res, next) => {
+exports.refresh_token = (req, res) => {
+  let { email } = req.body;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          errors: [{ user: "Account not found" }],
+        });
+      } else {
+        let access_token = createJWT(
+          user.email,
+          user._id,
+          process.env.TOKEN_LIFE
+        );
+
+        jwt.verify(access_token, process.env.TOKEN_SECRET, (err, decoded) => {
+          if (err) {
+            res.status(500).json({ error: "Error in JWT verification" });
+          }
+          if (decoded) {
+            return res.status(200).json({
+              token: access_token,
+            });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Error finding account" });
+    });
+};
+
+exports.getUserData = (req, res) => {
+  let { email } = req.body;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          errors: [{ user: "Account not found" }],
+        });
+      } else {
+        return res.status(200).send(user);
+      }
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        errors: [{ user: "There was a problem finding the user" }],
+      });
+    });
+};
+
+exports.logout = (req, res) => {
   try {
-    if (req.cookies.token) {
-      res.clearCookie("token");
-      return res.json({ msg: `User logged out` });
+    if (req.cookies.jwt) {
+      res.clearCookie("jwt");
+      // res.redirect("/");
+      return res.json({ msg: `User logged out and cookie cleared` });
     } else {
       return res.json({
         msg: `No users currently logged in. Unable to logout`,
@@ -85,7 +138,7 @@ exports.signup = (req, res) => {
     .then((user) => {
       if (user) {
         return res
-          .status(400)
+          .status(409)
           .json({ errors: [{ user: "Account already exists." }] });
       } else {
         // If no display name, then use email instead
@@ -147,7 +200,7 @@ exports.signin = (req, res) => {
           .compare(password, user.password)
           .then((isMatch) => {
             if (!isMatch) {
-              return res.status(400).json({
+              return res.status(401).json({
                 errors: [{ password: "Password is incorrect" }],
               });
             }
@@ -166,15 +219,6 @@ exports.signin = (req, res) => {
                   res.status(500).json({ error: "Error in JWT verification" });
                 }
                 if (decoded) {
-                  var httpOnly = process.env.COOKIE_HTTPONLY_PARAM === "true";
-                  var sameSite = process.env.COOKIE_SAMESITE_PARAM === "true";
-                  var secure = process.env.COOKIE_SECURE_PARAM === "true";
-                  res.cookie("token", access_token, {
-                    httpOnly: httpOnly,
-                    sameSite: sameSite,
-                    secure: secure,
-                    maxAge: process.env.TOKEN_LIFE,
-                  });
                   return res.status(200).json({
                     success: true,
                     token: access_token,

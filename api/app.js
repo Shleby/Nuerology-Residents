@@ -6,6 +6,8 @@ require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
 const authRoutes = require("./routes/authRoutes");
+const { VerifyToken } = require("./middleware/auth");
+const { getUserData } = require("./controllers/authController");
 
 const app = express();
 
@@ -33,6 +35,7 @@ app.use(helmet()); // Protects are app from web vulnerabilities
 
 // set up routes
 app.use("/api", authRoutes);
+app.post("/api/getuserdata", VerifyToken, getUserData);
 
 const PORT = process.env.PORT;
 

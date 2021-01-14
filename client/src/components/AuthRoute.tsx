@@ -1,7 +1,7 @@
 import { Redirect, Route, RouteComponentProps } from "react-router-dom";
 import React from "react";
 import { NonAuthRoutes } from "../authentication/userAuth";
-import { useUserContext } from "../context/userContext";
+import Cookies from "universal-cookie";
 
 interface IAuthRouteProps {
   Component: React.FC<RouteComponentProps>;
@@ -16,10 +16,10 @@ export const AuthRoute = ({
   exact = false,
   requiredRoles,
 }: IAuthRouteProps): JSX.Element => {
-  const { loggedIn, userType } = useUserContext()!;
-
-  const userHasRequiredRole = requiredRoles.includes(userType);
-  const isAuthenticated = loggedIn; // TODO: verify if token is still valid
+  const cookies = new Cookies();
+  const userHasRequiredRole = requiredRoles.includes(
+    cookies.get("usertype") || ""
+  );
 
   const message = userHasRequiredRole
     ? "Please log in to view this page"
@@ -30,7 +30,7 @@ export const AuthRoute = ({
       exact={exact}
       path={path}
       render={(props: RouteComponentProps) =>
-        isAuthenticated && userHasRequiredRole ? (
+        cookies.get("success") && userHasRequiredRole ? (
           <Component {...props} />
         ) : (
           <Redirect

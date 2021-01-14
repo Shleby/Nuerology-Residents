@@ -16,7 +16,11 @@ module.exports = {
       secondary: "#ffed4a",
       danger: "#e3342f",
     }),
-    extend: {},
+    extend: {
+      backgroundImage: (theme) => ({
+        "login-img": "url('/src/assets/background2.jpg')",
+      }),
+    },
   },
   variants: {
     extend: {},
