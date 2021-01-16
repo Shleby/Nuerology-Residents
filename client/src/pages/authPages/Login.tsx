@@ -1,10 +1,4 @@
-import {
-  Button,
-  makeStyles,
-  TextField,
-  Theme,
-  withStyles,
-} from "@material-ui/core";
+import { makeStyles, TextField, Theme } from "@material-ui/core";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
@@ -14,6 +8,7 @@ import { useToastContext } from "../../context/toastContext";
 import "../../App.css";
 import Cookies from "universal-cookie";
 import { LogoutApi } from "../../authentication/jwtFunctions";
+import { ColorButton } from "../../components/ColorButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {
@@ -109,16 +104,6 @@ export default function Login() {
       setFormPassword(e.target.value);
     }
   }
-  const ColorButton = withStyles((theme: Theme) => ({
-    root: {
-      color: "white",
-      backgroundColor: "#841617",
-      "&:hover": {
-        backgroundColor: "rgba(132,22,23,0.8)",
-      },
-      marginTop: "20px",
-    },
-  }))(Button);
 
   const submit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -182,6 +167,9 @@ export default function Login() {
           } else if (res.data.message.userType === "admin") {
             console.log("Successfully Logged In");
             history.push("/admin");
+          } else if (res.data.message.userType === "superAdmin") {
+            console.log("Successfully Logged In");
+            history.push("/admin");
           }
         }
       });
@@ -215,16 +203,63 @@ export default function Login() {
     setLoggedIn(false);
   }
 
+  function GoToDashboard() {
+    if (cookies.get("usertype") === "resident") {
+      return (
+        <Link to="/resident_dashboard" className="lg:text-lg">
+          <text className="text-white lg:text-crimson">
+            Go to dashboard -{">"}
+          </text>
+        </Link>
+      );
+    } else if (cookies.get("usertype") === "attendee") {
+      return (
+        <Link to="/attendee_dashboard" className="lg:text-lg">
+          <text className="text-white lg:text-crimson">
+            Go to dashboard -{">"}
+          </text>
+        </Link>
+      );
+    } else if (cookies.get("usertype") === "nurse") {
+      return (
+        <Link to="/nurse_dashboard" className="lg:text-lg">
+          <text className="text-white lg:text-crimson">
+            Go to dashboard -{">"}
+          </text>
+        </Link>
+      );
+    } else if (
+      cookies.get("usertype") === "admin" ||
+      cookies.get("usertype") === "superAdmin"
+    ) {
+      return (
+        <Link to="/admin" className="lg:text-lg">
+          <text className="text-white lg:text-crimson">
+            Go to dashboard -{">"}
+          </text>
+        </Link>
+      );
+    } else {
+      return (
+        <text className="text-white lg:text-crimson">
+          Error, please log out. User type not found
+        </text>
+      );
+    }
+  }
+
   if (isLoggedIn) {
     return (
-      <div className="xl:grid xl:grid-cols-3">
-        <div className="xl:col-span-2 xl:h-screen xl:bg-img">
-          <div className="xl:flex xl:flex-row xl:items-center xl:mt-6 xl:ml-6 xl:text-4xl font-quicksand">
+      <div className="lg:grid lg:grid-cols-3 lg:bg-none lg:pt-0 lg:px-0 lg:justify-items-stretch lg:text-black text-white h-screen w-full flex flex-col pt-5 px-3 overflow-hidden bg-login-img justify-items-center items-center text-white">
+        <div className="lg:col-span-2 lg:h-screen lg:bg-login-img lg:bg-cover lg:bg-no-repeat lg:bg-center">
+          <div className="lg:mt-6 lg:ml-6 lg:text-4xl font-quicksand flex flex-row items-center">
             <HomeSvg />
-            <h1 className="text-white">Track your time in Residency</h1>
+            <h1 className="lg:text-white text-xl sm:text-4xl">
+              Track your time in Residency
+            </h1>
           </div>
         </div>
-        <div className="xl:bg-white xl:shadow-2xl xl:shadow-inner xl:h-screen xl:grid xl:justify-items-center">
+        <div className="lg:shadow-2xl lg:shadow-inner lg:h-screen lg:grid lg:justify-items-center lg:w-full w-full sm:w-9/12">
           <ToastContainer
             position="top-right"
             autoClose={5000}
@@ -236,36 +271,40 @@ export default function Login() {
             draggable
             pauseOnHover
           />
-          <div className="enter-anim xl:rounded-lg xl:shadow-2xl xl:w-3/4 xl:bg-white xl:mt-96 xl:h-64 xl:flex-col xl:flex xl:p-6">
-            <h1 className="xl:text-4xl" style={{ color: "#841617" }}>
+          <div className="enter-anim lg:block lg:rounded-lg lg:shadow-2xl lg:w-3/4 lg:bg-white lg:h-64 sm:flex-col sm:flex lg:p-6">
+            <h1 className="lg:text-4xl lg:text-crimson text-white">
               Welcome back
             </h1>
-            <h1 className="xl:text-4xl" style={{ color: "black" }}>
+            <h1 className="lg:text-4xl text-white lg:text-black">
               {cookies.get("displayname")}
             </h1>
-            <h2 className="xl:text-2xl">
-              <text className="xl:text-lightGrey">
+            <h2 className="lg:text-2xl">
+              <text className="lg:text-lightGrey">
                 You are already logged in
               </text>
             </h2>
-            <Link to="/resident_dashboard" className="xl:text-lg">
-              <text style={{ color: "#841617" }}>Go to dashboard -{">"}</text>
-            </Link>
-            <ColorButton onClick={(e) => logout(e)}>Logout</ColorButton>
+            {GoToDashboard()}
+            <div>
+              <ColorButton className="w-full" onClick={(e) => logout(e)}>
+                Logout
+              </ColorButton>
+            </div>
           </div>
         </div>
       </div>
     );
   } else {
     return (
-      <div className="xl:grid xl:grid-cols-3 xl:overflow-hidden">
-        <div className="xl:col-span-2 xl:h-screen bg-img">
-          <div className="xl:flex xl:flex-row xl:items-center xl:mt-6 xl:ml-6 xl:text-4xl font-quicksand">
+      <div className="lg:grid lg:grid-cols-3 lg:bg-none lg:pt-0 lg:px-0 lg:justify-items-stretch lg:text-black text-white h-screen w-full flex flex-col pt-5 px-3 overflow-hidden bg-login-img justify-items-center items-center text-white">
+        <div className="lg:col-span-2 lg:h-screen lg:bg-login-img lg:bg-cover lg:bg-no-repeat lg:bg-center">
+          <div className="lg:mt-6 lg:ml-6 lg:text-4xl font-quicksand flex flex-row items-center">
             <HomeSvg />
-            <h1 className="xl:text-white">Track your time in Residency</h1>
+            <h1 className="lg:text-white text-xl sm:text-4xl">
+              Track your time in Residency
+            </h1>
           </div>
         </div>
-        <div className=" xl:bg-white xl:shadow-2xl xl:shadow-inner xl:h-screen xl:grid xl:justify-items-center">
+        <div className="lg:shadow-2xl lg:shadow-inner lg:h-screen lg:grid lg:justify-items-center lg:w-full w-full sm:w-9/12">
           <ToastContainer
             position="top-right"
             autoClose={5000}
@@ -277,57 +316,72 @@ export default function Login() {
             draggable
             pauseOnHover
           />
-          <div className="enter-anim xl:rounded-lg xl:shadow-2xl xl:w-3/4 xl:bg-white xl:mt-96 xl:h-96 xl:flex-col xl:flex xl:p-9">
-            <h1 className="xl:text-4xl" style={{ color: "#841617" }}>
+          <div className="enter-anim lg:block lg:rounded-lg lg:shadow-2xl lg:w-3/4 lg:bg-white sm:flex-col sm:flex lg:p-6">
+            <h1 className="xl:text-4xl lg:text-left text-center text-2xl sm:text-3xl lg:text-crimson text-white">
               Welcome back
             </h1>
-            <h2 className="xl:text-3xl">
-              <text className="xl:text-lightGrey">Login</text> /{" "}
+            <h2 className="lg:text-left lg:text-3xl text-center text-2xl xl:text-4xl sm:text-3xl">
+              <text className="text-lightGrey">Login</text> /{" "}
               <Link to="/register">Sign up</Link>
             </h2>
-            <form
-              className="xl:flex xl:flex-col xl:mt-6 xl:gap-4"
-              onSubmit={submit}
-            >
-              <TextField
-                id="email"
-                name="email"
-                label="Email"
-                variant="filled"
-                value={formEmail}
-                required
-                onChange={(
-                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                ) => onFormChange(e, "email")}
-                InputProps={{
-                  className: classes.textField,
-                }}
-                InputLabelProps={{
-                  className: classes.textField,
-                }}
-              />
-              <TextField
-                id="password"
-                name="password"
-                label="Password"
-                variant="filled"
-                value={formPassword}
-                type="password"
-                required
-                defaultValue=""
-                onChange={(
-                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                ) => onFormChange(e, "password")}
-                InputProps={{
-                  className: classes.textField,
-                }}
-                InputLabelProps={{
-                  className: classes.textField,
-                }}
-              />
-              <ColorButton variant="contained" type="submit" onSubmit={submit}>
-                Login
-              </ColorButton>
+            <form className="lg:pt-4 pt-20" onSubmit={submit}>
+              <div className="w-full">
+                <div className="pb-2">
+                  <TextField
+                    id="email"
+                    name="email"
+                    label="Email"
+                    variant="filled"
+                    className="w-full"
+                    value={formEmail}
+                    required
+                    onChange={(
+                      e: React.ChangeEvent<
+                        HTMLInputElement | HTMLTextAreaElement
+                      >
+                    ) => onFormChange(e, "email")}
+                    InputProps={{
+                      className: classes.textField,
+                    }}
+                    InputLabelProps={{
+                      className: classes.textField,
+                    }}
+                  />
+                </div>
+                <div className="pb-2">
+                  <TextField
+                    id="password"
+                    name="password"
+                    label="Password"
+                    variant="filled"
+                    className="w-full"
+                    value={formPassword}
+                    type="password"
+                    required
+                    defaultValue=""
+                    onChange={(
+                      e: React.ChangeEvent<
+                        HTMLInputElement | HTMLTextAreaElement
+                      >
+                    ) => onFormChange(e, "password")}
+                    InputProps={{
+                      className: classes.textField,
+                    }}
+                    InputLabelProps={{
+                      className: classes.textField,
+                    }}
+                  />
+                </div>
+
+                <ColorButton
+                  variant="contained"
+                  className="w-full"
+                  type="submit"
+                  onSubmit={submit}
+                >
+                  Login
+                </ColorButton>
+              </div>
             </form>
           </div>
         </div>

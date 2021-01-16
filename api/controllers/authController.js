@@ -91,11 +91,29 @@ exports.deleteUser = (req, res) => {
     // if user logged in, clear token
     res.clearCookie("token");
   }
-  let { id } = req.body;
-  User.findByIdAndDelete(id, function (err) {
-    if (err) console.log(err.message);
-    console.log("Deletion successful");
-  });
+  let { email } = req.body;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          errors: [{ user: "Account not found" }],
+        });
+      } else {
+        User.findByIdAndDelete(user.id, function (err) {
+          if (err) {
+            return res.status(500).json({ erorrs: err.message });
+          } else {
+            return res.status(200).json({ user: "Deletion Successful" });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        errors: [{ user: "There was a problem finding the user" }],
+      });
+    });
 };
 
 exports.signup = (req, res) => {
@@ -106,6 +124,7 @@ exports.signup = (req, res) => {
     ouid,
     displayName,
     userType,
+    adminSecret,
   } = req.body;
 
   // Validation checks
@@ -127,10 +146,13 @@ exports.signup = (req, res) => {
   if (userType === "resident") {
   } else if (userType === "nurse") {
   } else if (userType === "attendee") {
-  } else if (userType === "admin") {
-  } else if (userType === "superAdmin") {
+  } else if (userType === "admin" && adminSecret === process.env.ADMIN_SECRET) {
+  } else if (
+    userType === "superAdmin" &&
+    adminSecret === process.env.ADMIN_SECRET
+  ) {
   } else {
-    return res.status(400).json({ msg: "Invalid user role" });
+    return res.status(402).json({ msg: "Invalid user role" });
   }
 
   // Check to see if user exists, if not create

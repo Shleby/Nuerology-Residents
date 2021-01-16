@@ -16,6 +16,7 @@ import Unauthorized from "./pages/Unauthorized";
 import { UserContext } from "./context/userContext";
 import ResidentLanding from "./pages/resident_pages/ResidentLanding";
 import { ToastContext } from "./context/toastContext";
+import AdminLanding from "./pages/admin_pages/AdminLanding";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -152,7 +153,7 @@ function CreateRouting() {
             {/* Paths available for authenticated admins */}
             <AuthRoute
               path={AuthRoutes.adminPanel}
-              Component={NotFound}
+              Component={AdminLanding}
               requiredRoles={[
                 String(UserRoles.admin),
                 String(UserRoles.superAdmin),
