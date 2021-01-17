@@ -253,14 +253,18 @@ export default function AdminLanding() {
   }
 
   return (
-    <div className="grid grid-cols-3 bg-admin-img bg-cover bg-no-repeat bg-center h-screen">
-      <div className="grid col-span-2 py-10 px-28">
-        <Paper className="font-quicksand h-auto">
-          <h1 className="text-center text-3xl pt-5">Developer Tools</h1>
-          <div className="grid grid-cols-2">
+    <div className="xl:grid xl:grid-cols-3 xl:bg-admin-img xl:bg-cover 2xl:h-screen xl:bg-no-repeat xl:bg-center h-full p-10">
+      <div className="xl:grid xl:col-span-2 xl:pr-10">
+        <Paper className="font-quicksand xl:h-auto xl:mb-0 xl:p-5 p-10 mb-10">
+          <h1 className="xl:text-center xl:text-3xl text-2xl">
+            Developer Tools
+          </h1>
+          <div className="xl:grid xl:grid-cols-2">
             <div>
-              <h2 className="pl-10 pt-10 text-2xl">Quick Navigation</h2>
-              <div className="flex flex-col px-10 pb-10">
+              <h2 className="xl:pl-10 xl:pt-10 xl:text-2xl text-xl">
+                Quick Navigation
+              </h2>
+              <div className="flex flex-col xl:px-10 xl:pb-10">
                 <ColorButton>
                   <Link to="/resident_dashboard">Go to Resident Dashboard</Link>
                 </ColorButton>
@@ -308,17 +312,17 @@ export default function AdminLanding() {
               </div>
             </div>
             <div>
-              <h2 className="pl-10 pt-10 text-2xl">
+              <h2 className="xl:pl-10 xl:pt-10 xl:text-2xl">
                 Future Tools to be implemented
               </h2>
             </div>
           </div>
         </Paper>
       </div>
-      <div className="pt-10 pr-28">
-        <Paper className="font-quicksand">
-          <h1 className="text-center text-3xl pt-5">Admin Tools</h1>
-          <div className="flex flex-col px-10 pb-10">
+      <div className="xl:mb-0 mb-10">
+        <Paper className="font-quicksand p-10 xl:p-0">
+          <h1 className="text-center text-3xl xl:pt-5">Admin Tools</h1>
+          <div className="flex flex-col xl:px-10 xl:pb-10">
             <ColorButton onClick={handleDeleteOpen}>Delete User</ColorButton>
             <Dialog
               open={deleteOpen}
@@ -518,7 +522,7 @@ export default function AdminLanding() {
                     className: classes.textField,
                   }}
                 />
-                <h1 className="font-quicksand pt-5">Search Results</h1>
+                <h1 className="font-quicksand xl:pt-5">Search Results</h1>
                 <h1>Name: {formName}</h1>
                 <h1>Email: {email}</h1>
                 <h1>OUID: {formOUID}</h1>
