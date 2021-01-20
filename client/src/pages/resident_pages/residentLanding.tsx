@@ -4,7 +4,11 @@ import { toast, ToastContainer } from "react-toastify";
 import { useToastContext } from "../../context/toastContext";
 import Cookies from "universal-cookie";
 import refreshToken, { LogoutApi } from "../../authentication/jwtFunctions";
-
+import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
+import PieChartRoundedIcon from "@material-ui/icons/PieChartRounded";
+import SupervisedUserCircleRoundedIcon from "@material-ui/icons/SupervisedUserCircleRounded";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import DeleteIcon from "@material-ui/icons/Delete";
 export default function ResidentLanding() {
   const cookies = new Cookies();
   const { loginSuccess, toggleLoginSuccess } = useToastContext();
@@ -68,7 +72,21 @@ export default function ResidentLanding() {
         draggable
         pauseOnHover
       />
-      <button onClick={(e) => loadData()}>Click me</button>
+      <div className="flex flex-row">
+        <div className="h-screen flex flex-col p-10">
+          <DeleteIcon />
+          <hr className="text-black" />
+          <span className="flex flex-col justify-start h-5/6">
+            <AppsRoundedIcon className="text-gray-300" />
+            <PieChartRoundedIcon className="text-gray-300" />
+            <SupervisedUserCircleRoundedIcon className="text-gray-300" />
+          </span>
+          <ExitToAppIcon className="text-5xl text-gray-300" />
+        </div>
+        <div className="h-screen flex-grow bg-yellow ">f</div>
+        <div className="h-screen ">d</div>
+      </div>
+      {/* <button onClick={(e) => loadData()}>Click me</button>
       <div>
         <h1>Resident Landing Page</h1>
         <h1>Hello, {displayName}</h1>
@@ -78,7 +96,7 @@ export default function ResidentLanding() {
         <h1>{displayName}</h1>
         <h1>{userType}</h1>
         <h1>{token}</h1>
-      </div>
+      </div> */}
     </div>
   );
 }
